@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ImageSearchUnsplashApi"
 include ':app'
+include ':data'
+include ':domain'
