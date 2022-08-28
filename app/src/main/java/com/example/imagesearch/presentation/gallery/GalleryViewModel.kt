@@ -27,6 +27,10 @@ class GalleryViewModel @Inject constructor(
     val photos: StateFlow<PagingData<UnsplashPhoto>> =
         photosResult.likeStateFlow(viewModelScope, PagingData.empty())
 
+    fun searchPhotos(query: String) {
+        currentQuery.value = query
+    }
+
     companion object {
         private const val DEFAULT_QUERY = "cats"
     }

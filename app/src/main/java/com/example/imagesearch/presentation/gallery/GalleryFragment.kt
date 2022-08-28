@@ -1,13 +1,15 @@
 package com.example.imagesearch.presentation.gallery
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LoadState
+import com.example.imagesearch.R
 import com.example.imagesearch.common.observe
 import com.example.imagesearch.databinding.FragmentGalleryBinding
 import com.example.imagesearch.presentation.ImageSearchApp
@@ -50,11 +52,43 @@ class GalleryFragment : Fragment() {
         setupViewModel()
         setupRecyclerView()
         observeViewModel()
+        setupGalleryMenu()
+    }
+
+    private fun setupGalleryMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_gallary, menu)
+
+                val searchItem = menu.findItem(R.id.action_search)
+                val searchView = searchItem.actionView as SearchView
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        if (query != null) {
+                            binding.recyclerView.scrollToPosition(0)
+                            viewModel.searchPhotos(query)
+                            searchView.clearFocus()
+                        }
+                        return true
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        return true
+                    }
+                })
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun observeViewModel() {
         viewModel.photos.observe(viewLifecycleOwner) {
-            photoAdapter.submitData(it)
+            photoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
     }
 
@@ -70,9 +104,9 @@ class GalleryFragment : Fragment() {
                 itemAnimator = null
             }
 
-//            buttonRetry.setOnClickListener {
-//                photoAdapter.retry()
-//            }
+            buttonRetry.setOnClickListener {
+                photoAdapter.retry()
+            }
         }
 
         photoAdapter.addLoadStateListener { loadState ->
