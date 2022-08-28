@@ -8,6 +8,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.imagesearch.R
 import com.example.imagesearch.common.observe
@@ -16,9 +17,10 @@ import com.example.imagesearch.presentation.ImageSearchApp
 import com.example.imagesearch.presentation.ViewModelFactory
 import com.example.imagesearch.presentation.gallery.adapter.UnsplashPhotoAdapter
 import com.example.imagesearch.presentation.gallery.adapter.UnsplashPhotoLoadStateAdapter
+import com.example.imagesearch.presentation.model.UnsplashPhoto
 import javax.inject.Inject
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(), UnsplashPhotoAdapter.OnItemClickListener {
 
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
@@ -33,7 +35,7 @@ class GalleryFragment : Fragment() {
     private lateinit var viewModel: GalleryViewModel
 
     private val photoAdapter: UnsplashPhotoAdapter by lazy {
-        UnsplashPhotoAdapter()
+        UnsplashPhotoAdapter(this)
     }
 
     override fun onCreateView(
@@ -136,5 +138,10 @@ class GalleryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(photo: UnsplashPhoto) {
+        val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)
+        findNavController().navigate(action)
     }
 }
