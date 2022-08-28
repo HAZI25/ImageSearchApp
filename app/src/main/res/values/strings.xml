@@ -2,4 +2,6 @@
     <string name="app_name">ImageSearchUnsplashApi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="retry"><u>Retry</u></string>
+    <string name="result_could_not_be_loaded">Result could not be loaded</string>
 </resources>
