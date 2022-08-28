@@ -21,6 +21,6 @@ interface UnsplashService {
         private const val QUERY_PARAM_PAGE = "page"
         private const val QUERY_PARAM_PER_PAGE = "per_page"
 
-        const val CLIENT_ID = BuildConfig.API_KEY
+        private const val CLIENT_ID = BuildConfig.API_KEY
     }
 }
