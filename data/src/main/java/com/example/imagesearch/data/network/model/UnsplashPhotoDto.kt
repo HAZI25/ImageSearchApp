@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 class UnsplashPhotoDto(
     @SerializedName("description")
-    val description: String,
+    val description: String?,
     @SerializedName("id")
     val id: String,
     @SerializedName("likes")
