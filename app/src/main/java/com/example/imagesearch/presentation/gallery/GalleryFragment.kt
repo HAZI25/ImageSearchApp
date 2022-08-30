@@ -8,16 +8,17 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.imagesearch.R
-import com.example.imagesearch.common.observe
 import com.example.imagesearch.databinding.FragmentGalleryBinding
 import com.example.imagesearch.presentation.ImageSearchApp
 import com.example.imagesearch.presentation.ViewModelFactory
 import com.example.imagesearch.presentation.gallery.adapter.UnsplashPhotoAdapter
 import com.example.imagesearch.presentation.gallery.adapter.UnsplashPhotoLoadStateAdapter
 import com.example.imagesearch.presentation.model.UnsplashPhoto
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class GalleryFragment : Fragment(), UnsplashPhotoAdapter.OnItemClickListener {
@@ -89,8 +90,10 @@ class GalleryFragment : Fragment(), UnsplashPhotoAdapter.OnItemClickListener {
     }
 
     private fun observeViewModel() {
-        viewModel.photos.observe(viewLifecycleOwner) {
-            photoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+        lifecycleScope.launch() {
+            viewModel.photos.collect {
+                photoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+            }
         }
     }
 
